@@ -1,0 +1,31 @@
+name: Refresh prayer times and weather
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "7,37 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prayer-times-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Refresh published files
+        run: node scripts/refresh.mjs
+      - name: Commit changed schedule
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html config/index.html .nojekyll
+          git diff --cached --quiet || git commit -m "Refresh Dubai prayer times and weather"
+          git push
