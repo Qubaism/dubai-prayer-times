@@ -83,6 +83,9 @@ function render(data, error = null) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#0b2d63">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./assets/app-icon.png">
   <title>Dubai Prayer Times</title>
   <style>
     :root { font-family: Inter, "Segoe UI", system-ui, sans-serif; color: #082b69; background: #fff; }
@@ -92,6 +95,11 @@ function render(data, error = null) {
     header { position: relative; margin-bottom: 18px; }
     .eyebrow { display: none; }
     .title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+    .header-actions { display: flex; align-items: flex-start; gap: 10px; }
+    .notify-button { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #d8e2ef; border-radius: 50%; color: #244d88; background: #fff; cursor: pointer; box-shadow: 0 3px 12px #16386518; }
+    .notify-button:hover { background: #f4f8fc; }
+    .notify-button.active { color: #fff; border-color: #176d58; background: #176d58; }
+    .notify-button svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     h1 { margin: 0 0 3px; font-size: clamp(1.45rem, 4vw, 2.1rem); letter-spacing: -.03em; text-align: left; text-transform: uppercase; }
     .header-meta { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; margin-top: 4px; color: #5371a4; font-size: .86rem; }
     .header-meta .details { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; justify-self: start; }
@@ -133,21 +141,44 @@ function render(data, error = null) {
     footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: #5371a4; font-size: clamp(.6rem, 2.2vw, .72rem); white-space: nowrap; }
     a { color: #5371a4; text-decoration: none; }
     .error { margin: 0 0 14px; padding: 12px 14px; border-radius: 12px; color: #7a281e; background: #ffe8e3; }
-    @media (max-width: 650px) { .header-meta { grid-template-columns: 1fr auto; } .date-center { grid-column: 1 / -1; grid-row: 2; margin-top: 4px; } .grid { grid-template-columns: repeat(2, 1fr); } }
+    dialog { width: min(520px, calc(100% - 28px)); max-height: calc(100vh - 28px); padding: 0; border: 0; border-radius: 20px; color: #0b2d63; background: #fff; box-shadow: 0 24px 80px #0b24435c; }
+    dialog::backdrop { background: #071a3766; backdrop-filter: blur(3px); }
+    .notify-panel { padding: 24px; }
+    .notify-panel header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin: 0 0 18px; }
+    .notify-panel h2 { margin: 0; font-size: 1.3rem; }
+    .notify-panel p { margin: 5px 0 0; color: #61779a; font-size: .84rem; line-height: 1.45; }
+    .dialog-close { border: 0; color: #244d88; background: transparent; font-size: 1.6rem; cursor: pointer; }
+    .notification-group { margin-top: 16px; padding: 15px; border: 1px solid #dce5ef; border-radius: 14px; background: #f9fbfd; }
+    .notification-group h3 { margin: 0 0 3px; font-size: .95rem; }
+    .notification-group > span { display: block; margin-bottom: 12px; color: #61779a; font-size: .74rem; }
+    .reminder-time { display: flex; align-items: center; gap: 9px; margin: 12px 0 0; color: #244d88; font-size: .78rem; font-weight: 650; }
+    .reminder-time input { width: 72px; padding: 7px 8px; border: 1px solid #cbd8e7; border-radius: 8px; color: #0b2d63; background: #fff; font: inherit; }
+    .prayer-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+    .prayer-options label { display: grid; place-items: center; gap: 5px; min-width: 0; padding: 9px 3px; border: 1px solid #dce5ef; border-radius: 10px; color: #244d88; background: #fff; font-size: .7rem; cursor: pointer; }
+    .prayer-options input { accent-color: #176d58; }
+    .notify-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+    .notify-actions button { padding: 10px 14px; border: 1px solid #176d58; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    .save-notifications { color: #fff; background: #176d58; }
+    .disable-notifications { color: #176d58; background: #fff; }
+    #notification-status { min-height: 20px; margin-top: 12px; color: #45678f; font-size: .78rem; }
+    @media (max-width: 650px) { .header-meta { grid-template-columns: 1fr auto; } .date-center { grid-column: 1 / -1; grid-row: 2; margin-top: 4px; } .grid { grid-template-columns: repeat(2, 1fr); } .weather-heading img { width: 34px; height: 34px; } .notify-button { width: 36px; height: 36px; } .prayer-options { grid-template-columns: repeat(3, 1fr); } }
   </style>
 </head>
 <body>
   <main>
-    <header><div class="eyebrow">Dubai · Asia/Dubai</div><div class="title-row"><h1>Today's Prayer Times</h1>${data?.temperature ? `<span class="weather-heading">${data.iconUrl ? `<img src="${data.iconUrl}" alt="${data.condition || "Dubai weather"}">` : ""}<span>${data.condition || "Dubai weather"}</span></span>` : ""}</div><div class="header-meta"><div class="details"><span>Dubai, UAE</span><span class="sep">·</span><span id="current-time">--:--:--</span></div><div class="date-center">${data?.fullDate || "Schedule unavailable"} &nbsp;|&nbsp; ${data?.hijri || "Hijri date unavailable"}</div>${data?.temperature ? `<strong class="weather-temp">DXB ${data.temperature}</strong>` : `<span aria-hidden="true"></span>`}</div></header>
+    <header><div class="eyebrow">Dubai · Asia/Dubai</div><div class="title-row"><h1>Today's Prayer Times</h1><div class="header-actions"><button class="notify-button" id="notification-button" type="button" aria-label="Prayer notification settings" title="Prayer notification settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button>${data?.temperature ? `<span class="weather-heading">${data.iconUrl ? `<img src="${data.iconUrl}" alt="${data.condition || "Dubai weather"}">` : ""}<span>${data.condition || "Dubai weather"}</span></span>` : ""}</div></div><div class="header-meta"><div class="details"><span>Dubai, UAE</span><span class="sep">·</span><span id="current-time">--:--:--</span></div><div class="date-center">${data?.fullDate || "Schedule unavailable"} &nbsp;|&nbsp; ${data?.hijri || "Hijri date unavailable"}</div>${data?.temperature ? `<strong class="weather-temp">DXB ${data.temperature}</strong>` : `<span aria-hidden="true"></span>`}</div></header>
     ${error ? `<p class="error">Live schedule could not be retrieved. Please refresh shortly.</p>` : ""}
     <section class="grid">${cards}</section>
     <section class="next" id="next-card"><i class="next-icon" id="next-icon" aria-hidden="true">${iconSvgs.Maghrib}</i><small>Upcoming prayer</small><strong id="next-name">Calculating…</strong><span class="next-time" id="next-time">—</span><div class="count-label">Live countdown</div><div id="countdown">00 : 00 : 00</div><div class="units">Hours Minutes Seconds</div></section>
     <footer><span>Source: <a href="${SOURCE_URL}" target="_blank" rel="noreferrer">Khaleej Times · Dubai</a></span><span>↻ Daily auto-update</span></footer>
+    <dialog id="notification-dialog"><form method="dialog" class="notify-panel"><header><div><h2>Prayer notifications</h2><p>Choose adhan alerts and separate reminders before the prayer period ends.</p></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></header><section class="notification-group"><h3>At adhan time</h3><span>Notify me when each selected prayer begins.</span><div class="prayer-options" id="adhan-options"></div></section><section class="notification-group"><h3>Before prayer time ends</h3><span>Fajr before Sunrise; every other prayer before the next adhan.</span><div class="prayer-options" id="reminder-options"></div><label class="reminder-time">Remind me <input id="reminder-minutes" type="number" min="5" max="60" step="1" value="15" inputmode="numeric"> minutes before</label></section><div class="notify-actions"><button class="save-notifications" id="save-notifications" type="button">Enable selected notifications</button><button class="disable-notifications" id="disable-notifications" type="button">Disable all</button></div><div id="notification-status" role="status" aria-live="polite"></div></form></dialog>
   </main>
   <script>
     const schedule = ${payload};
     const names = ${JSON.stringify(NAMES)};
     const icons = ${JSON.stringify(iconSvgs)};
+    const notificationPrayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+    const pushApiUrl = "https://dubai-prayer-times-push.qubaismn.workers.dev";
     const originalDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
     function parseTime(value, base) {
       const match = /^(\\d{1,2}):(\\d{2})\\s*(AM|PM)$/i.exec(value || "");
@@ -180,7 +211,89 @@ function render(data, error = null) {
       document.querySelector("#next-time").textContent = schedule.times[next.name];
       document.querySelector("#countdown").textContent = h + " : " + m + " : " + s;
     }
-    tick(); setInterval(tick, 1000);
+    function toApplicationServerKey(value) {
+      const padding = "=".repeat((4 - value.length % 4) % 4);
+      const base64 = (value + padding).replace(/-/g, "+").replace(/_/g, "/");
+      const raw = atob(base64);
+      return Uint8Array.from(Array.from(raw).map(char => char.charCodeAt(0)));
+    }
+    function renderOptions(containerId, key) {
+      const saved = JSON.parse(localStorage.getItem(key) || "null");
+      const selected = Array.isArray(saved) ? saved : notificationPrayers;
+      document.querySelector(containerId).innerHTML = notificationPrayers.map(function(name) {
+        return '<label><input type="checkbox" value="' + name + '" ' + (selected.includes(name) ? 'checked' : '') + '><span>' + name + '</span></label>';
+      }).join("");
+    }
+    function selections(containerId) {
+      return Array.from(document.querySelectorAll(containerId + " input:checked")).map(input => input.value);
+    }
+    async function currentSubscription() {
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) return null;
+      const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+      await navigator.serviceWorker.ready;
+      return { registration, subscription: await registration.pushManager.getSubscription() };
+    }
+    async function refreshNotificationState() {
+      const button = document.querySelector("#notification-button");
+      try {
+        const current = await currentSubscription();
+        button.classList.toggle("active", Boolean(current && current.subscription && Notification.permission === "granted"));
+      } catch { button.classList.remove("active"); }
+    }
+    document.querySelector("#notification-button").addEventListener("click", async function() {
+      renderOptions("#adhan-options", "prayerAdhanSelections");
+      renderOptions("#reminder-options", "prayerReminderSelections");
+      document.querySelector("#reminder-minutes").value = localStorage.getItem("prayerReminderMinutes") || "15";
+      document.querySelector("#notification-status").textContent = "";
+      document.querySelector("#notification-dialog").showModal();
+    });
+    document.querySelector("#save-notifications").addEventListener("click", async function() {
+      const status = document.querySelector("#notification-status");
+      const adhanPrayers = selections("#adhan-options");
+      const reminderPrayers = selections("#reminder-options");
+      const reminderMinutes = Math.min(60, Math.max(5, Number(document.querySelector("#reminder-minutes").value) || 15));
+      if (!adhanPrayers.length && !reminderPrayers.length) { status.textContent = "Select at least one notification, or choose Disable all."; return; }
+      if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) { status.textContent = "Push notifications are not supported in this browser."; return; }
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.matchMedia("(display-mode: standalone)").matches) { status.textContent = "On iPhone or iPad, first use Share → Add to Home Screen, then open the installed app."; return; }
+      try {
+        status.textContent = "Requesting notification permission…";
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") { status.textContent = "Notifications were not allowed. You can enable them in browser settings."; return; }
+        const current = await currentSubscription();
+        let subscription = current.subscription;
+        const isNew = !subscription;
+        if (!subscription) {
+          const keyResponse = await fetch(pushApiUrl + "/vapid-public-key");
+          if (!keyResponse.ok) throw new Error("Notification service is unavailable");
+          const key = await keyResponse.json();
+          subscription = await current.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toApplicationServerKey(key.publicKey) });
+        }
+        const response = await fetch(pushApiUrl + "/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ subscription, adhanPrayers, reminderPrayers, reminderMinutes }) });
+        if (!response.ok) throw new Error("Could not save notification choices");
+        localStorage.setItem("prayerAdhanSelections", JSON.stringify(adhanPrayers));
+        localStorage.setItem("prayerReminderSelections", JSON.stringify(reminderPrayers));
+        localStorage.setItem("prayerReminderMinutes", String(reminderMinutes));
+        if (isNew) await fetch(pushApiUrl + "/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ subscription }) });
+        status.textContent = "Notifications enabled. Your choices have been saved.";
+        await refreshNotificationState();
+      } catch (error) { status.textContent = error instanceof Error ? error.message : "Could not enable notifications."; }
+    });
+    document.querySelector("#disable-notifications").addEventListener("click", async function() {
+      const status = document.querySelector("#notification-status");
+      try {
+        const current = await currentSubscription();
+        if (current && current.subscription) {
+          await fetch(pushApiUrl + "/subscribe", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ endpoint: current.subscription.endpoint }) });
+          await current.subscription.unsubscribe();
+        }
+        localStorage.removeItem("prayerAdhanSelections");
+        localStorage.removeItem("prayerReminderSelections");
+        localStorage.removeItem("prayerReminderMinutes");
+        status.textContent = "All prayer notifications are disabled.";
+        await refreshNotificationState();
+      } catch { status.textContent = "Could not disable notifications. Please try again."; }
+    });
+    tick(); setInterval(tick, 1000); refreshNotificationState();
   </script>
 </body>
 </html>`;

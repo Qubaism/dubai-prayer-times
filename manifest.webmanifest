@@ -1,0 +1,13 @@
+{
+  "name": "Dubai Prayer Times",
+  "short_name": "Prayer Times",
+  "description": "Dubai prayer times with daily updates and upcoming prayer countdown.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b2d63",
+  "icons": [
+    { "src": "./assets/app-icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
