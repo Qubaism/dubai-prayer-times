@@ -150,6 +150,15 @@
     function selections(containerId) {
       return Array.from(document.querySelectorAll(containerId + " input:checked")).map(input => input.value);
     }
+    function isAppleMobile() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    }
+    function isHomeScreenApp() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+    function appleSetupMessage() {
+      return "For notifications on iPhone or iPad: tap Share → Add to Home Screen, keep Open as Web App enabled, then open Prayer Times from its Home Screen icon.";
+    }
     async function currentSubscription() {
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) return null;
       const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
@@ -167,7 +176,7 @@
       renderOptions("#adhan-options", "prayerAdhanSelections");
       renderOptions("#reminder-options", "prayerReminderSelections");
       document.querySelector("#reminder-minutes").value = localStorage.getItem("prayerReminderMinutes") || "15";
-      document.querySelector("#notification-status").textContent = "";
+      document.querySelector("#notification-status").textContent = isAppleMobile() && !isHomeScreenApp() ? appleSetupMessage() : "";
       document.querySelector("#notification-dialog").showModal();
     });
     document.querySelector("#save-notifications").addEventListener("click", async function() {
@@ -176,8 +185,8 @@
       const reminderPrayers = selections("#reminder-options");
       const reminderMinutes = Math.min(60, Math.max(5, Number(document.querySelector("#reminder-minutes").value) || 15));
       if (!adhanPrayers.length && !reminderPrayers.length) { status.textContent = "Select at least one notification, or choose Disable all."; return; }
+      if (isAppleMobile() && !isHomeScreenApp()) { status.textContent = appleSetupMessage(); return; }
       if (!("serviceWorker" in navigator) || !("PushManager" in window) || !("Notification" in window)) { status.textContent = "Push notifications are not supported in this browser."; return; }
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.matchMedia("(display-mode: standalone)").matches) { status.textContent = "On iPhone or iPad, first use Share → Add to Home Screen, then open the installed app."; return; }
       try {
         status.textContent = "Requesting notification permission…";
         const permission = await Notification.requestPermission();
