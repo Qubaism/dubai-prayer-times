@@ -12,6 +12,8 @@ Responsive Dubai prayer-times card for browsers and Microsoft Teams.
 
 On iPhone and iPad, Apple exposes Web Push only when the site has been added to the Home Screen and opened from its Home Screen icon. The notification panel shows this setup guidance when it is opened in a normal iOS browser tab.
 
+At phone widths, the mosque artwork uses contain-fit scaling so the full background illustration remains visible inside each prayer card instead of being cropped.
+
 Sunrise remains visible in the schedule but is not a selectable notification. It is used only as the Fajr reminder cutoff. Other reminders are calculated before the following adhan.
 
 The workflow keeps the last successful page if either source cannot be read, preventing a temporary source outage from replacing the working site with an error page.
