@@ -95,7 +95,6 @@ function render(data, error = null) {
     header { position: relative; margin-bottom: 18px; }
     .eyebrow { display: none; }
     .title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
-    .header-actions { display: flex; align-items: flex-start; gap: 10px; }
     .notify-button { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #d8e2ef; border-radius: 50%; color: #244d88; background: #fff; cursor: pointer; box-shadow: 0 3px 12px #16386518; }
     .notify-button:hover { background: #f4f8fc; }
     .notify-button.active { color: #fff; border-color: #176d58; background: #176d58; }
@@ -114,6 +113,9 @@ function render(data, error = null) {
     .next::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(180deg, #06172a20, #03111f78); }
     .next-icon { position: absolute; right: 22px; top: 15px; width: 44px; height: 44px; color: #fff2a8; opacity: .86; filter: drop-shadow(0 2px 5px #0018); }
     .next-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .next .notify-button { position: absolute; z-index: 2; left: 22px; top: 15px; color: #fff2a8; border-color: #fff3; background: #ffffff12; box-shadow: 0 3px 12px #0013; }
+    .next .notify-button:hover { background: #ffffff24; }
+    .next .notify-button.active { color: #fff; border-color: #64c4a8; background: #13745f; }
     .next small { display: block; opacity: .92; font-weight: 700; text-transform: uppercase; }
     .next strong { display: block; margin: 10px 0 1px; font-size: 1.85rem; }
     .next-time { display: block; font-size: 1.55rem; font-weight: 700; }
@@ -166,10 +168,10 @@ function render(data, error = null) {
 </head>
 <body>
   <main>
-    <header><div class="eyebrow">Dubai · Asia/Dubai</div><div class="title-row"><h1>Today's Prayer Times</h1><div class="header-actions"><button class="notify-button" id="notification-button" type="button" aria-label="Prayer notification settings" title="Prayer notification settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button>${data?.temperature ? `<span class="weather-heading">${data.iconUrl ? `<img src="${data.iconUrl}" alt="${data.condition || "Dubai weather"}">` : ""}<span>${data.condition || "Dubai weather"}</span></span>` : ""}</div></div><div class="header-meta"><div class="details"><span>Dubai, UAE</span><span class="sep">·</span><span id="current-time">--:--:--</span></div><div class="date-center">${data?.fullDate || "Schedule unavailable"} &nbsp;|&nbsp; ${data?.hijri || "Hijri date unavailable"}</div>${data?.temperature ? `<strong class="weather-temp">DXB ${data.temperature}</strong>` : `<span aria-hidden="true"></span>`}</div></header>
+    <header><div class="eyebrow">Dubai · Asia/Dubai</div><div class="title-row"><h1>Today's Prayer Times</h1>${data?.temperature ? `<span class="weather-heading">${data.iconUrl ? `<img src="${data.iconUrl}" alt="${data.condition || "Dubai weather"}">` : ""}<span>${data.condition || "Dubai weather"}</span></span>` : ""}</div><div class="header-meta"><div class="details"><span>Dubai, UAE</span><span class="sep">·</span><span id="current-time">--:--:--</span></div><div class="date-center">${data?.fullDate || "Schedule unavailable"} &nbsp;|&nbsp; ${data?.hijri || "Hijri date unavailable"}</div>${data?.temperature ? `<strong class="weather-temp">DXB ${data.temperature}</strong>` : `<span aria-hidden="true"></span>`}</div></header>
     ${error ? `<p class="error">Live schedule could not be retrieved. Please refresh shortly.</p>` : ""}
     <section class="grid">${cards}</section>
-    <section class="next" id="next-card"><i class="next-icon" id="next-icon" aria-hidden="true">${iconSvgs.Maghrib}</i><small>Upcoming prayer</small><strong id="next-name">Calculating…</strong><span class="next-time" id="next-time">—</span><div class="count-label">Live countdown</div><div id="countdown">00 : 00 : 00</div><div class="units">Hours Minutes Seconds</div></section>
+    <section class="next" id="next-card"><button class="notify-button" id="notification-button" type="button" aria-label="Prayer notification settings" title="Prayer notification settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button><i class="next-icon" id="next-icon" aria-hidden="true">${iconSvgs.Maghrib}</i><small>Upcoming prayer</small><strong id="next-name">Calculating…</strong><span class="next-time" id="next-time">—</span><div class="count-label">Live countdown</div><div id="countdown">00 : 00 : 00</div><div class="units">Hours Minutes Seconds</div></section>
     <footer><span>Source: <a href="${SOURCE_URL}" target="_blank" rel="noreferrer">Khaleej Times · Dubai</a></span><span>↻ Daily auto-update</span></footer>
     <dialog id="notification-dialog"><form method="dialog" class="notify-panel"><header><div><h2>Prayer notifications</h2><p>Choose adhan alerts and separate reminders before the prayer period ends.</p></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></header><section class="notification-group"><h3>At adhan time</h3><span>Notify me when each selected prayer begins.</span><div class="prayer-options" id="adhan-options"></div></section><section class="notification-group"><h3>Before prayer time ends</h3><span>Fajr before Sunrise; every other prayer before the next adhan.</span><div class="prayer-options" id="reminder-options"></div><label class="reminder-time">Remind me <input id="reminder-minutes" type="number" min="5" max="60" step="1" value="15" inputmode="numeric"> minutes before</label></section><div class="notify-actions"><button class="save-notifications" id="save-notifications" type="button">Enable selected notifications</button><button class="disable-notifications" id="disable-notifications" type="button">Disable all</button></div><div id="notification-status" role="status" aria-live="polite"></div></form></dialog>
   </main>
