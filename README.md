@@ -11,6 +11,7 @@ Responsive UAE prayer-times card for browsers and Microsoft Teams.
 - Emirate selector: Abu Dhabi, Dubai, Ajman, Fujairah, Ras Al Khaimah, Sharjah and Umm Al Quwain
 - Reminder progression: the selected initial reminder alerts once, then five-minute updates down to five minutes are always silent; if a user swipes the notification away, the next update may reappear silently
 - Adhan notifications replace any remaining reminder and always alert as a new prayer begins
+- The service-worker registration is versioned and bypasses the browser cache so notification-behavior fixes activate promptly after the page is reopened
 
 On iPhone and iPad, Apple exposes Web Push only when the site has been added to the Home Screen and opened from its Home Screen icon. The notification panel shows this setup guidance when it is opened in a normal iOS browser tab.
 

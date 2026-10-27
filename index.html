@@ -206,7 +206,11 @@
     }
     async function currentSubscription() {
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) return null;
-      const registration = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+      const registration = await navigator.serviceWorker.register("./sw.js?v=20261027-2", {
+        scope: "./",
+        updateViaCache: "none",
+      });
+      await registration.update();
       await navigator.serviceWorker.ready;
       return { registration, subscription: await registration.pushManager.getSubscription() };
     }

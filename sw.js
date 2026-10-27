@@ -1,3 +1,5 @@
+self.PRAYER_SW_VERSION = "20261027-2";
+
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => event.waitUntil(clients.claim()));
 
@@ -14,7 +16,7 @@ self.addEventListener("push", (event) => {
       tag,
       renotify: isSilentUpdate ? false : !data.silent,
       silent: isSilentUpdate ? true : Boolean(data.silent),
-      data: { url: data.url || "./" },
+      data: { url: data.url || "./", serviceWorkerVersion: self.PRAYER_SW_VERSION },
     });
   })());
 });
