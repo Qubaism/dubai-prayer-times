@@ -1,3 +1,5 @@
+// Legacy standalone renderer retained for the Teams configuration page reference.
+// The published multi-emirate page is refreshed by scripts/refresh.mjs using index.html as its template.
 const SOURCE_URL = "https://www.khaleejtimes.com/prayer-time-uae/dubai";
 const WEATHER_URL = "https://www.khaleejtimes.com/weather/uae/dubai";
 const NAMES = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
@@ -91,7 +93,7 @@ function render(data, error = null) {
     :root { font-family: Inter, "Segoe UI", system-ui, sans-serif; color: #082b69; background: #fff; }
     * { box-sizing: border-box; }
     body { min-height: 100vh; margin: 0; background: #fff; }
-    main { width: min(920px, 100%); margin: auto; padding: clamp(18px, 3vw, 34px); }
+    main { display: flex; flex-direction: column; width: min(920px, 100%); min-height: 100dvh; margin: auto; padding: clamp(18px, 3vw, 34px); }
     header { position: relative; margin-bottom: 18px; }
     .eyebrow { display: none; }
     .title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
@@ -136,10 +138,22 @@ function render(data, error = null) {
     .phase-asr { --sky-a: #e7aa46c9; --sky-b: #f1c878bd; }
     .phase-maghrib { --sky-a: #b34d43e8; --sky-b: #33365bea; }
     .phase-isha { --sky-a: #071a37f2; --sky-b: #123e59ed; }
-    .prayer.active { color: white; border-color: #176d58; box-shadow: inset 0 0 0 2px #f2d278a8, 0 7px 18px #174d421d; }
+    .prayer.active { color: white; border: 3px solid #176d58; box-shadow: inset 0 0 0 2px #f2d278b8, 0 7px 18px #174d421d; }
     .prayer.active::before { background: linear-gradient(180deg, #07533f28, #07392d91); }
     .phase-dhuhr span, .phase-dhuhr strong, .phase-asr span, .phase-asr strong { color: #071e51; text-shadow: 0 1px 4px #fff9; }
     .phase-fajr span, .phase-fajr strong, .phase-sunrise span, .phase-sunrise strong, .phase-maghrib span, .phase-maghrib strong, .phase-isha span, .phase-isha strong, .prayer.active span, .prayer.active strong { color: white; text-shadow: 0 1px 4px #0018; }
+    .page-bottom { margin-top: auto; padding-top: 16px; }
+    .emirate-tools { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 7px; border-top: 1px solid #dce5df; }
+    .emirate-tools > span { color: #5371a4; font-size: .7rem; font-weight: 750; letter-spacing: .02em; }
+    .location-button { padding: 0; border: 0; color: #244d88; background: transparent; font: inherit; font-size: .7rem; font-weight: 750; line-height: 1; cursor: pointer; }
+    .location-button:hover { color: #082b69; text-decoration: underline; }
+    .location-button:disabled { opacity: .65; cursor: wait; transform: none; }
+    #location-status { margin-top: 3px; color: #5371a4; font-size: .68rem; text-align: right; }
+    #location-status:empty { display: none; }
+    .emirate-picker { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 7px; margin-top: 4px; padding: 0 0 4px; }
+    .emirate-picker button { min-width: 0; padding: 8px 3px; border: 0; border-radius: 999px; color: #102c5d; background: #fbf5e7; font: inherit; font-size: clamp(.55rem, 1.2vw, .68rem); font-weight: 750; letter-spacing: .005em; line-height: 1.1; text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: color .18s ease, background .18s ease, transform .18s ease; }
+    .emirate-picker button:hover { transform: translateY(-1px); background: #f4ead0; }
+    .emirate-picker button.active { color: #fff; background: #082b69; box-shadow: 0 4px 12px #082b6926; }
     footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; color: #5371a4; font-size: clamp(.6rem, 2.2vw, .72rem); white-space: nowrap; }
     a { color: #5371a4; text-decoration: none; }
     .error { margin: 0 0 14px; padding: 12px 14px; border-radius: 12px; color: #7a281e; background: #ffe8e3; }
@@ -163,7 +177,10 @@ function render(data, error = null) {
     .save-notifications { color: #fff; background: #176d58; }
     .disable-notifications { color: #176d58; background: #fff; }
     #notification-status { min-height: 20px; margin-top: 12px; color: #45678f; font-size: .78rem; }
+    @media (max-width: 800px) { .emirate-picker { grid-template-columns: repeat(8, minmax(0, 1fr)); margin-inline: -2px; } .emirate-picker button { grid-column: span 2; min-height: 34px; padding: 7px 5px; font-size: .62rem; white-space: normal; overflow-wrap: anywhere; } .emirate-picker button:nth-child(5) { grid-column: 2 / span 2; } }
     @media (max-width: 650px) { .header-meta { grid-template-columns: 1fr auto; } .date-center { grid-column: 1 / -1; grid-row: 2; margin-top: 4px; } .grid { grid-template-columns: repeat(2, 1fr); } .prayer, .next { background-position: center, center bottom; background-size: cover, contain; } .weather-heading img { width: 34px; height: 34px; } .notify-button { width: 36px; height: 36px; } .prayer-options { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 520px) { .emirate-picker { grid-template-columns: repeat(3, minmax(0, 1fr)); } .emirate-picker button, .emirate-picker button:nth-child(5) { grid-column: auto; } .emirate-picker button:last-child { grid-column: 2; } }
+    @media (max-width: 360px) { .emirate-picker { grid-template-columns: repeat(4, minmax(0, 1fr)); } .emirate-picker button, .emirate-picker button:nth-child(5) { grid-column: span 2; } .emirate-picker button:last-child { grid-column: 2 / span 2; } }
   </style>
 </head>
 <body>
@@ -172,7 +189,9 @@ function render(data, error = null) {
     ${error ? `<p class="error">Live schedule could not be retrieved. Please refresh shortly.</p>` : ""}
     <section class="grid">${cards}</section>
     <section class="next" id="next-card"><button class="notify-button" id="notification-button" type="button" aria-label="Prayer notification settings" title="Prayer notification settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button><i class="next-icon" id="next-icon" aria-hidden="true">${iconSvgs.Maghrib}</i><small>Upcoming prayer</small><strong id="next-name">Calculating…</strong><span class="next-time" id="next-time">—</span><div class="count-label">Live countdown</div><div id="countdown">00 : 00 : 00</div><div class="units">Hours Minutes Seconds</div></section>
-    <footer><span>Source: <a href="${SOURCE_URL}" target="_blank" rel="noreferrer">Khaleej Times · Dubai</a></span><span>↻ Daily auto-update</span></footer>
+    <div class="page-bottom"><div class="emirate-tools"><span>Select Emirate</span><button class="location-button" id="use-location" type="button">Use my location</button></div><div id="location-status" role="status" aria-live="polite"></div>
+    <nav class="emirate-picker" aria-label="Choose an emirate"><button type="button">Abu Dhabi</button><button type="button" class="active" aria-current="true">Dubai</button><button type="button">Ajman</button><button type="button">Fujairah</button><button type="button">Ras Al Khaimah</button><button type="button">Sharjah</button><button type="button">Umm Al Quwain</button></nav>
+    <footer><span>Source: <a href="${SOURCE_URL}" target="_blank" rel="noreferrer">Khaleej Times · Dubai</a></span><span>↻ Daily auto-update</span></footer></div>
     <dialog id="notification-dialog"><form method="dialog" class="notify-panel"><header><div><h2>Prayer notifications</h2><p>Choose adhan alerts and separate reminders before the prayer period ends.</p></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></header><section class="notification-group"><h3>At adhan time</h3><span>Notify me when each selected prayer begins.</span><div class="prayer-options" id="adhan-options"></div></section><section class="notification-group"><h3>Before prayer time ends</h3><span>Fajr before Sunrise; every other prayer before the next adhan.</span><div class="prayer-options" id="reminder-options"></div><label class="reminder-time">Remind me <input id="reminder-minutes" type="number" min="5" max="60" step="1" value="15" inputmode="numeric"> minutes before</label></section><div class="notify-actions"><button class="save-notifications" id="save-notifications" type="button">Enable selected notifications</button><button class="disable-notifications" id="disable-notifications" type="button">Disable all</button></div><div id="notification-status" role="status" aria-live="polite"></div></form></dialog>
   </main>
   <script>
@@ -181,6 +200,13 @@ function render(data, error = null) {
     const icons = ${JSON.stringify(iconSvgs)};
     const notificationPrayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
     const pushApiUrl = "https://dubai-prayer-times-push.qubaismn.workers.dev";
+    document.querySelectorAll(".emirate-picker button").forEach(function(button) {
+      button.addEventListener("click", function() {
+        document.querySelectorAll(".emirate-picker button").forEach(function(item) { item.classList.remove("active"); item.removeAttribute("aria-current"); });
+        button.classList.add("active");
+        button.setAttribute("aria-current", "true");
+      });
+    });
     const originalDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
     function parseTime(value, base) {
       const match = /^(\\d{1,2}):(\\d{2})\\s*(AM|PM)$/i.exec(value || "");

@@ -1,14 +1,21 @@
 self.addEventListener("push", (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch { data = {}; }
-  event.waitUntil(self.registration.showNotification(data.title || "Dubai Prayer Times", {
-    body: data.body || "Prayer-time notification",
-    icon: "./assets/app-icon.png",
-    badge: "./assets/app-icon.png",
-    tag: data.kind && data.prayer ? data.kind + "-" + data.prayer : "prayer-time",
-    renotify: true,
-    data: { url: data.url || "./" },
-  }));
+  event.waitUntil((async () => {
+    const tag = "prayer-alert";
+    const existing = await self.registration.getNotifications({ tag });
+    if (data.updateOnly && existing.length === 0) return;
+    existing.forEach((notification) => notification.close());
+    await self.registration.showNotification(data.title || "UAE Prayer Times", {
+      body: data.body || "Prayer-time notification",
+      icon: "./assets/app-icon.png",
+      badge: "./assets/app-icon.png",
+      tag,
+      renotify: !data.silent,
+      silent: Boolean(data.silent),
+      data: { url: data.url || "./" },
+    });
+  })());
 });
 
 self.addEventListener("notificationclick", (event) => {
