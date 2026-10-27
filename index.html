@@ -206,7 +206,7 @@
     }
     async function currentSubscription() {
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) return null;
-      const registration = await navigator.serviceWorker.register("./sw.js?v=20261027-2", {
+      const registration = await navigator.serviceWorker.register("./sw.js?v=20261027-3", {
         scope: "./",
         updateViaCache: "none",
       });

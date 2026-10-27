@@ -1,4 +1,4 @@
-self.PRAYER_SW_VERSION = "20261027-2";
+self.PRAYER_SW_VERSION = "20261027-3";
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) => event.waitUntil(clients.claim()));
@@ -9,6 +9,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil((async () => {
     const tag = "prayer-alert";
     const isSilentUpdate = data.kind === "reminder" && data.updateOnly;
+    const existing = await self.registration.getNotifications();
+    for (const notification of existing) notification.close();
     await self.registration.showNotification(data.title || "UAE Prayer Times", {
       body: data.body || "Prayer-time notification",
       icon: "./assets/app-icon.png",
