@@ -62,14 +62,7 @@
     .phase-dhuhr span, .phase-dhuhr strong, .phase-asr span, .phase-asr strong { color: #071e51; text-shadow: 0 1px 4px #fff9; }
     .phase-fajr span, .phase-fajr strong, .phase-sunrise span, .phase-sunrise strong, .phase-maghrib span, .phase-maghrib strong, .phase-isha span, .phase-isha strong, .prayer.active span, .prayer.active strong { color: white; text-shadow: 0 1px 4px #0018; }
     .page-bottom { margin-top: auto; padding-top: 16px; }
-    .emirate-tools { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 7px; border-top: 1px solid #dce5df; }
-    .emirate-tools > span { color: #5371a4; font-size: .7rem; font-weight: 750; letter-spacing: .02em; }
-    .location-button { padding: 0; border: 0; color: #244d88; background: transparent; font: inherit; font-size: .7rem; font-weight: 750; line-height: 1; cursor: pointer; }
-    .location-button:hover { color: #082b69; text-decoration: underline; }
-    .location-button:disabled { opacity: .65; cursor: wait; transform: none; }
-    #location-status { margin-top: 3px; color: #5371a4; font-size: .68rem; text-align: right; }
-    #location-status:empty { display: none; }
-    .emirate-picker { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 7px; margin-top: 4px; padding: 0 0 4px; }
+    .emirate-picker { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 7px; margin-top: 0; padding: 7px 0 4px; border-top: 1px solid #dce5df; }
     .emirate-picker button { min-width: 0; padding: 8px 3px; border: 0; border-radius: 999px; color: #102c5d; background: #fbf5e7; font: inherit; font-size: clamp(.55rem, 1.2vw, .68rem); font-weight: 750; letter-spacing: .005em; line-height: 1.1; text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: color .18s ease, background .18s ease, transform .18s ease; }
     .emirate-picker button:hover { transform: translateY(-1px); background: #f4ead0; }
     .emirate-picker button.active { color: #fff; background: #082b69; box-shadow: 0 4px 12px #082b6926; }
@@ -108,7 +101,7 @@
     
     <section class="grid"><article class="prayer phase-fajr" data-name="Fajr"><i aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 33h30M14 38h20"/><path d="M17 32a7 7 0 0 1 14 0"/><path d="M24 14v5M13 20l4 4M35 20l-4 4"/></svg></i><span>Fajr</span><strong>5:05 AM</strong></article><article class="prayer phase-sunrise" data-name="Sunrise"><i aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="27" r="7"/><path d="M24 10v6M24 38v-4M8 27h6M34 27h6M13 16l5 5M35 16l-5 5M11 38h26"/></svg></i><span>Sunrise</span><strong>6:20 AM</strong></article><article class="prayer phase-dhuhr" data-name="Dhuhr"><i aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="8"/><path d="M24 7v7M24 34v7M7 24h7M34 24h7M12 12l5 5M36 12l-5 5M12 36l5-5M36 36l-5-5"/></svg></i><span>Dhuhr</span><strong>12:05 PM</strong></article><article class="prayer phase-asr" data-name="Asr"><i aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="25" cy="25" r="8"/><path d="M25 9v6M25 35v5M9 25h6M35 25h6M14 14l5 5M36 14l-5 5M14 36l5-5M36 36l-5-5M9 42h32"/></svg></i><span>Asr</span><strong>3:18 PM</strong></article><article class="prayer phase-maghrib" data-name="Maghrib"><i aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 29h28M13 35h22"/><path d="M16 28a8 8 0 0 1 16 0"/><path d="M24 11v6M13 17l4 4M35 17l-4 4"/></svg></i><span>Maghrib</span><strong>5:45 PM</strong></article><article class="prayer phase-isha" data-name="Isha"><i aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M33 34A14 14 0 1 1 27 10a12 12 0 0 0 6 24Z"/></svg></i><span>Isha</span><strong>7:00 PM</strong></article></section>
     <section class="next" id="next-card"><button class="notify-button" id="notification-button" type="button" aria-label="Prayer notification settings" title="Prayer notification settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></button><i class="next-icon" id="next-icon" aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 29h28M13 35h22"/><path d="M16 28a8 8 0 0 1 16 0"/><path d="M24 11v6M13 17l4 4M35 17l-4 4"/></svg></i><small>Upcoming prayer</small><strong id="next-name">Calculating…</strong><span class="next-time" id="next-time">—</span><div class="count-label">Live countdown</div><div id="countdown">00 : 00 : 00</div><div class="units">Hours Minutes Seconds</div></section>
-    <div class="page-bottom"><div class="emirate-tools"><span>Select Emirate</span><button class="location-button" id="use-location" type="button">Use my location</button></div><div id="location-status" role="status" aria-live="polite"></div>
+    <div class="page-bottom">
     <nav class="emirate-picker" aria-label="Choose an emirate"><button type="button" data-emirate="abu-dhabi">Abu Dhabi</button><button type="button" data-emirate="dubai" class="active" aria-current="true">Dubai</button><button type="button" data-emirate="ajman">Ajman</button><button type="button" data-emirate="fujairah">Fujairah</button><button type="button" data-emirate="ras-al-khaimah">Ras Al Khaimah</button><button type="button" data-emirate="sharjah">Sharjah</button><button type="button" data-emirate="umm-al-quwain">Umm Al Quwain</button></nav>
     <footer><span>Source: <a id="source-link" href="https://www.khaleejtimes.com/prayer-time-uae/dubai" target="_blank" rel="noreferrer">Khaleej Times · Dubai</a></span><span>↻ Daily auto-update</span></footer></div>
     <dialog id="notification-dialog"><form method="dialog" class="notify-panel"><header><div><h2>Prayer notifications</h2><p>Choose adhan alerts and separate reminders before the prayer period ends.</p></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></header><section class="notification-group"><h3>At adhan time</h3><span>Notify me when each selected prayer begins.</span><div class="prayer-options" id="adhan-options"></div></section><section class="notification-group"><h3>Before prayer time ends</h3><span>Fajr before Sunrise; every other prayer before the next adhan.</span><div class="prayer-options" id="reminder-options"></div><label class="reminder-time">Remind me <input id="reminder-minutes" type="number" min="5" max="60" step="1" value="15" inputmode="numeric"> minutes before</label></section><div class="notify-actions"><button class="save-notifications" id="save-notifications" type="button">Enable selected notifications</button><button class="disable-notifications" id="disable-notifications" type="button">Disable all</button></div><div id="notification-status" role="status" aria-live="polite"></div></form></dialog>
@@ -121,15 +114,6 @@
     const icons = {"Fajr":"<svg viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"M9 33h30M14 38h20\"/><path d=\"M17 32a7 7 0 0 1 14 0\"/><path d=\"M24 14v5M13 20l4 4M35 20l-4 4\"/></svg>","Sunrise":"<svg viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"24\" cy=\"27\" r=\"7\"/><path d=\"M24 10v6M24 38v-4M8 27h6M34 27h6M13 16l5 5M35 16l-5 5M11 38h26\"/></svg>","Dhuhr":"<svg viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"24\" cy=\"24\" r=\"8\"/><path d=\"M24 7v7M24 34v7M7 24h7M34 24h7M12 12l5 5M36 12l-5 5M12 36l5-5M36 36l-5-5\"/></svg>","Asr":"<svg viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"25\" cy=\"25\" r=\"8\"/><path d=\"M25 9v6M25 35v5M9 25h6M35 25h6M14 14l5 5M36 14l-5 5M14 36l5-5M36 36l-5-5M9 42h32\"/></svg>","Maghrib":"<svg viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"M10 29h28M13 35h22\"/><path d=\"M16 28a8 8 0 0 1 16 0\"/><path d=\"M24 11v6M13 17l4 4M35 17l-4 4\"/></svg>","Isha":"<svg viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"M33 34A14 14 0 1 1 27 10a12 12 0 0 0 6 24Z\"/></svg>"};
     const notificationPrayers = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
     const pushApiUrl = "https://dubai-prayer-times-push.qubaismn.workers.dev";
-    const emirateCentres = {
-      "abu-dhabi": [24.4539, 54.3773],
-      "dubai": [25.2048, 55.2708],
-      "ajman": [25.4052, 55.5136],
-      "fujairah": [25.1288, 56.3265],
-      "ras-al-khaimah": [25.8007, 55.9762],
-      "sharjah": [25.3463, 55.4209],
-      "umm-al-quwain": [25.5647, 55.5552]
-    };
     function renderEmirate(key) {
       const selected = emirateSchedules[key];
       if (!selected) return;
@@ -158,55 +142,10 @@
       renderEmirate(key);
       if (syncNotifications !== false) syncNotificationEmirate().catch(function() {});
     }
-    function distanceKm(lat1, lon1, lat2, lon2) {
-      const toRadians = function(value) { return value * Math.PI / 180; };
-      const dLat = toRadians(lat2 - lat1);
-      const dLon = toRadians(lon2 - lon1);
-      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(dLon / 2) ** 2;
-      return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    }
-    function nearestEmirate(latitude, longitude) {
-      return Object.keys(emirateCentres).reduce(function(nearest, key) {
-        const centre = emirateCentres[key];
-        const distance = distanceKm(latitude, longitude, centre[0], centre[1]);
-        return !nearest || distance < nearest.distance ? { key: key, distance: distance } : nearest;
-      }, null).key;
-    }
     document.querySelectorAll(".emirate-picker button").forEach(function(button) {
       button.addEventListener("click", function() {
-        localStorage.removeItem("autoEmirateLocation");
         selectEmirate(button.dataset.emirate, true);
-        document.querySelector("#location-status").textContent = "";
       });
-    });
-    function locateAndSelectEmirate(rememberChoice) {
-      const button = document.querySelector("#use-location");
-      const status = document.querySelector("#location-status");
-      if (!navigator.geolocation) {
-        status.textContent = "Location is not supported here. Choose an emirate below.";
-        return;
-      }
-      button.disabled = true;
-      status.textContent = "Finding your approximate location…";
-      navigator.geolocation.getCurrentPosition(function(position) {
-        const key = nearestEmirate(position.coords.latitude, position.coords.longitude);
-        selectEmirate(key, true);
-        if (rememberChoice) localStorage.setItem("autoEmirateLocation", "true");
-        status.textContent = "Using " + emirateSchedules[key].name + " from your approximate location.";
-        button.disabled = false;
-      }, function(error) {
-        if (error.code === 1) {
-          status.textContent = "Location permission was not allowed. Choose an emirate below.";
-        } else if (error.code === 3) {
-          status.textContent = "Location timed out in this preview. Try again or choose an emirate below.";
-        } else {
-          status.textContent = "This preview browser could not provide a location. Try the live HTTPS site on your phone or choose below.";
-        }
-        button.disabled = false;
-      }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 1800000 });
-    }
-    document.querySelector("#use-location").addEventListener("click", function() {
-      locateAndSelectEmirate(true);
     });
     const originalDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Dubai" }).format(new Date());
     function parseTime(value, base) {
@@ -343,23 +282,6 @@
     if (savedEmirate && emirateSchedules[savedEmirate]) {
       selectEmirate(savedEmirate, false);
     } else { selectEmirate("dubai", false); }
-    if (localStorage.getItem("autoEmirateLocation") === "true" && navigator.permissions?.query) {
-      navigator.permissions.query({ name: "geolocation" }).then(function(permission) {
-        if (permission.state === "granted") locateAndSelectEmirate(false);
-      }).catch(function() {});
-    } else if (localStorage.getItem("autoEmirateLocation") === "true") {
-      locateAndSelectEmirate(false);
-    }
-    let lastLocationRefresh = 0;
-    document.addEventListener("visibilitychange", function() {
-      if (document.visibilityState !== "visible" || localStorage.getItem("autoEmirateLocation") !== "true") return;
-      if (Date.now() - lastLocationRefresh < 60000) return;
-      lastLocationRefresh = Date.now();
-      if (navigator.permissions?.query) navigator.permissions.query({ name: "geolocation" }).then(function(permission) {
-        if (permission.state === "granted") locateAndSelectEmirate(false);
-      }).catch(function() {});
-      else locateAndSelectEmirate(false);
-    });
     tick(); setInterval(tick, 1000); refreshNotificationState();
   </script>
 </body>
