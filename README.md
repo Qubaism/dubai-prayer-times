@@ -9,7 +9,7 @@ Responsive UAE prayer-times card for browsers and Microsoft Teams.
 - Optional browser push notifications: visitors can independently select any of the five prayers for adhan-time alerts and end-of-prayer reminders
 - Reminder timing: 15 minutes by default, adjustable from 5 to 60 minutes per browser
 - Emirate selector: Abu Dhabi, Dubai, Ajman, Fujairah, Ras Al Khaimah, Sharjah and Umm Al Quwain
-- Reminder progression: the selected initial reminder is followed by silent five-minute replacements down to five minutes while the notification remains visible
+- Reminder progression: the selected initial reminder alerts once, then five-minute updates down to five minutes are always silent; if a user swipes the notification away, the next update may reappear silently
 - Adhan notifications replace any remaining reminder and always alert as a new prayer begins
 
 On iPhone and iPad, Apple exposes Web Push only when the site has been added to the Home Screen and opened from its Home Screen icon. The notification panel shows this setup guidance when it is opened in a normal iOS browser tab.
@@ -22,6 +22,6 @@ The workflow refreshes every emirate independently and preserves the last succes
 
 ## Verification status
 
-- Code complete: seven-emirate refresh, persisted manual emirate selection, emirate-aware push subscriptions, reminder replacement sequence and adhan replacement.
+- Code complete: seven-emirate refresh, persisted manual emirate selection, emirate-aware push subscriptions, an alerting initial reminder, always-silent five-minute follow-ups and alerting adhan replacement.
 - Build verified: page scripts, Worker unit tests and Worker dry-run bundle.
 - Live verified by user: scheduled reminder replacement and alert/silent behavior. Manual emirate selection remains the only location choice and requires no location permission.
